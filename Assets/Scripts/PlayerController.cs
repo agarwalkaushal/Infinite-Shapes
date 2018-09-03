@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public float speed = 2.5f; //speed of the player,camera
+
     private int c = 0;
+    private Gameplay gameplay;
 
     // Use this for initialization
     void Start()
     {
-        
+        Camera camera = Camera.main;
+        gameplay = camera.GetComponent<Gameplay>();
     }
 
     void FixedUpdate()
@@ -26,7 +28,7 @@ public class PlayerController : MonoBehaviour {
         if (Gameplay.startGame)
         {
             //Keep the player moving in the upward direction
-            transform.Translate(Vector2.up * Time.deltaTime * speed);
+            transform.Translate(Vector2.up * Time.deltaTime * gameplay.speed);
 
             //Checks for the keypress A, if true then translate in left direction
             if (Input.GetKey(KeyCode.A))
