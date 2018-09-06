@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour {
 
 
     private int c = 0;
+
     private Gameplay gameplay;
 
     // Use this for initialization
@@ -21,11 +22,11 @@ public class PlayerController : MonoBehaviour {
         // initially, the temporary vector should equal the player's position
         Vector2 clampedPosition = transform.position;
         // Now we can manipulte it to clamp the y element
-        clampedPosition.x = Mathf.Clamp(transform.position.x, -2f,2f);
+        clampedPosition.x = Mathf.Clamp(transform.position.x, -2.75f,2.75f);
         // re-assigning the transform's position will clamp it
         transform.position = clampedPosition;
 
-        if (Gameplay.startGame)
+        if (Gameplay.startGame && !Gameplay.gameOver)
         {
             //Keep the player moving in the upward direction
             transform.Translate(Vector2.up * Time.deltaTime * gameplay.speed);
@@ -41,5 +42,17 @@ public class PlayerController : MonoBehaviour {
             transform.Translate(Input.acceleration.x * Time.deltaTime * 9,0,0);
         }
 
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag != gameplay.player.tag)
+            Gameplay.gameOver = true;
+        else
+        {
+            other.gameObject.SetActive(false);
+            Gameplay.score++;
+            Debug.Log(Gameplay.score);
+        }
     }
 }

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Gameplay : MonoBehaviour {
 
-    public static bool startGame = false;
-    public static bool gameOver = false;
+    public static bool startGame;
+    public static bool gameOver;
+    public static int score;
 
     public float speed = 2.5f; //speed of the player,camera
 
@@ -16,17 +18,20 @@ public class Gameplay : MonoBehaviour {
     private float timeSinceLastDestroyed;
     private float timeSinceLastSpawned;
     private float destroyRate = 10f;
-    private float spawnRate = 1.5f;
+    private float spawnRate = 1f;
     private float spawnXPosition;
     private float spawnYPosition;
 
     private Vector2 objectPoolPosition = new Vector2(0f, -6f);
 
     public GameObject player;
-    public GameObject tap;
+    public GameObject gameOverText;
     public GameObject oval;
     public GameObject triangle;
     public GameObject square;
+    public GameObject retry;
+
+    public Text displayScore;
 
     private GameObject[] gameObjects;
     private GameObject[] randomGameObjects;
@@ -35,6 +40,9 @@ public class Gameplay : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
+        score = 0;
+        startGame = true;
+        gameOver = false;
         gameObjects = new GameObject[3];
         randomGameObjects = new GameObject[6];
         rbs = new Rigidbody2D[6];
@@ -52,19 +60,32 @@ public class Gameplay : MonoBehaviour {
 
         timeSinceLastSpawned += Time.deltaTime;
 
-        if (startGame)
+        if(gameOver)
+        {
+            gameOverText.SetActive(true);
+            player.SetActive(false);
+            retry.SetActive(true);
+        }
+
+        if (startGame && !gameOver)
         {
             transform.Translate(Vector2.up * Time.deltaTime * speed);
-            for(int i = 0; i < 6; i++)
-            {
-                randomGameObjects[i].transform.RotateAround(randomGameObjects[i].transform.position, Vector3.back, 60 * Time.deltaTime);
-                int rVelocity = Random.Range(0, 2);
 
-                
+            //loop through all instantiated prefabs
+            for(int i = 0; i < 6; i++)
+            {                
+                //Rotate instantiated prefabs
+                randomGameObjects[i].transform.RotateAround(randomGameObjects[i].transform.position, Vector3.back, 60 * Time.deltaTime);
+
+                //Add velocity in x-axis
+                int rVelocity = Random.Range(0, 2);                
                 if (rVelocity == 0)
                     rbs[i].velocity = new Vector2(1f, 0f);
                 else
                     rbs[i].velocity = new Vector2(-1f, 0f);
+
+                //Clamp in x-axis                
+                rbs[i].position = new Vector2(Mathf.Clamp(rbs[i].position.x, -3f, 3f), rbs[i].position.y);
             }
             
             if (timeSinceLastSpawned >= spawnRate)
@@ -84,6 +105,7 @@ public class Gameplay : MonoBehaviour {
             }
         }
 
+        displayScore.text = score.ToString();
 		
 	}
 
@@ -103,24 +125,12 @@ public class Gameplay : MonoBehaviour {
         {
             randomPrefabIndex = Random.Range(0, 3);
             randomGameObjects[i] = Instantiate(gameObjects[randomPrefabIndex], objectPoolPosition, Quaternion.identity);
-
-            //Clamp the random gameobjects in the x axis
-
-            /*Vector2 clampedPosition = randomGameObjects[i].transform.position;
-            clampedPosition.x = Mathf.Clamp(randomGameObjects[i].transform.position.x, -3f, 3f);
-            randomGameObjects[i].transform.position = clampedPosition;*/
-
-            //get the rigidbody components of all the gameobjects to assign force to them in the Update method
             rbs[i] = randomGameObjects[i].GetComponent<Rigidbody2D>();
-
-            randomGameObjects[i].transform.position = new Vector3(Mathf.Clamp(Time.time, -3.0F, 3.0F), -6, 0);
         }
     }
 
-    public void tapToBegin()
+    public void Retry()
     {
-        startGame = true;
-        tap.SetActive(false);
-
+        SceneManager.LoadScene("MainMenu");
     }
 }
