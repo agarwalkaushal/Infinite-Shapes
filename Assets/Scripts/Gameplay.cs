@@ -89,20 +89,6 @@ public class Gameplay : MonoBehaviour {
             {                
                 //Rotate instantiated prefabs
                 randomGameObjects[i].transform.RotateAround(randomGameObjects[i].transform.position, Vector3.back, 90 * Time.deltaTime);
-
-                /*
-                
-                //Add velocity in x-axis
-                int rVelocity = Random.Range(0, 2);                
-                if (rVelocity == 0)
-                    rbs[i].velocity = new Vector2(2f, 0f);
-                else
-                    rbs[i].velocity = new Vector2(-2f, 0f);
-
-                //Clamp in x-axis                
-                rbs[i].position = new Vector2(Mathf.Clamp(rbs[i].position.x, -3f, 3f), rbs[i].position.y);
-
-                */
             }
             
             if (timeSinceLastSpawned >= spawnRate)
@@ -125,8 +111,49 @@ public class Gameplay : MonoBehaviour {
             {
                 speed = speed + 1.5f;
                 check2++;
-                //player.GetComponent<SpriteRenderer>().sprite = ovalPlayer;
-                //player.tag = "Oval";
+
+                if (player.tag == "Triangle")
+                {
+                    int temp = Random.Range(0, 2);
+                    if (temp == 0)
+                    {
+                        player.GetComponent<SpriteRenderer>().sprite = ovalPlayer;
+                        player.tag = "Oval";
+                    }
+                    else
+                    {
+                        player.GetComponent<SpriteRenderer>().sprite = squarePlayer;
+                        player.tag = "Square";
+                    }
+                }
+                else if (player.tag == "Oval")
+                {
+                    int temp = Random.Range(0, 2);
+                    if (temp == 0)
+                    {
+                        player.GetComponent<SpriteRenderer>().sprite = squarePlayer;
+                        player.tag = "Square";
+                    }
+                    else
+                    {
+                        player.GetComponent<SpriteRenderer>().sprite = trianglePlayer;
+                        player.tag = "Triangle";
+                    }
+                }
+                else
+                {
+                    int temp = Random.Range(0, 2);
+                    if (temp == 0)
+                    {
+                        player.GetComponent<SpriteRenderer>().sprite = ovalPlayer;
+                        player.tag = "Oval";
+                    }
+                    else
+                    {
+                        player.GetComponent<SpriteRenderer>().sprite = trianglePlayer;
+                        player.tag = "Triangle";
+                    }
+                }
             }
 
             if(score%10!=0)

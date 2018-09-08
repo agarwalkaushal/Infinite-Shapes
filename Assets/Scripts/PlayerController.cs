@@ -33,13 +33,13 @@ public class PlayerController : MonoBehaviour {
 
             //Checks for the keypress A, if true then translate in left direction
             if (Input.GetKey(KeyCode.A))
-                transform.Translate(Vector2.left * Time.deltaTime * 9);
+                transform.Translate(Vector2.left * Time.deltaTime * 10);
 
             //Checks for the keypress D, if true then translate in right direction
             if (Input.GetKey(KeyCode.D))
-                transform.Translate(Vector2.right * Time.deltaTime * 9);
+                transform.Translate(Vector2.right * Time.deltaTime * 10);
 
-            transform.Translate(Input.acceleration.x * Time.deltaTime * 9,0,0);
+            transform.Translate(Input.acceleration.x * Time.deltaTime * 10,0,0);
         }
 
     }
