@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
         // initially, the temporary vector should equal the player's position
         Vector2 clampedPosition = transform.position;
         // Now we can manipulte it to clamp the y element
-        clampedPosition.x = Mathf.Clamp(transform.position.x, -2.75f,2.75f);
+        clampedPosition.x = Mathf.Clamp(transform.position.x, -2.25f,2.25f);
         // re-assigning the transform's position will clamp it
         transform.position = clampedPosition;
 
@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour {
         {
             other.gameObject.SetActive(false);
             Gameplay.score++;
+            Gameplay.fuel++;
             Debug.Log(Gameplay.score);
         }
     }

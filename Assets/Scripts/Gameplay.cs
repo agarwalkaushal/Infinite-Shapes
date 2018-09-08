@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Sprites;
 
 public class Gameplay : MonoBehaviour {
 
     public static bool startGame;
     public static bool gameOver;
     public static int score;
+    public static int fuel;
+    public static int distance;
 
-    public float speed = 2.5f; //speed of the player,camera
+    public float speed = 3.5f; //speed of the player,camera
 
     private int randomPrefabIndex;
     private int currentShape=0;
+    private int check = 0;
+    private int check2 = 0;
 
     private float timeSinceLastDestroyed;
     private float timeSinceLastSpawned;
@@ -31,7 +36,12 @@ public class Gameplay : MonoBehaviour {
     public GameObject square;
     public GameObject retry;
 
-    public Text displayScore;
+    public Sprite trianglePlayer;
+    public Sprite ovalPlayer;
+    public Sprite squarePlayer;
+
+    public Text displayFuel;
+    public Text displayDistance;
 
     private GameObject[] gameObjects;
     private GameObject[] randomGameObjects;
@@ -41,6 +51,8 @@ public class Gameplay : MonoBehaviour {
     void Start () {
 
         score = 0;
+        fuel = 0;
+        distance = 0;
         startGame = true;
         gameOver = false;
         gameObjects = new GameObject[3];
@@ -70,29 +82,34 @@ public class Gameplay : MonoBehaviour {
         if (startGame && !gameOver)
         {
             transform.Translate(Vector2.up * Time.deltaTime * speed);
+            distance = (int)transform.position.y;
 
             //loop through all instantiated prefabs
             for(int i = 0; i < 6; i++)
             {                
                 //Rotate instantiated prefabs
-                randomGameObjects[i].transform.RotateAround(randomGameObjects[i].transform.position, Vector3.back, 60 * Time.deltaTime);
+                randomGameObjects[i].transform.RotateAround(randomGameObjects[i].transform.position, Vector3.back, 90 * Time.deltaTime);
 
+                /*
+                
                 //Add velocity in x-axis
                 int rVelocity = Random.Range(0, 2);                
                 if (rVelocity == 0)
-                    rbs[i].velocity = new Vector2(1f, 0f);
+                    rbs[i].velocity = new Vector2(2f, 0f);
                 else
-                    rbs[i].velocity = new Vector2(-1f, 0f);
+                    rbs[i].velocity = new Vector2(-2f, 0f);
 
                 //Clamp in x-axis                
                 rbs[i].position = new Vector2(Mathf.Clamp(rbs[i].position.x, -3f, 3f), rbs[i].position.y);
+
+                */
             }
             
             if (timeSinceLastSpawned >= spawnRate)
             {
                 timeSinceLastSpawned = 0;
-                spawnXPosition = Random.Range(-2f, 2f);
-                spawnYPosition = player.transform.position.y + 7.5f;
+                spawnXPosition = Random.Range(-2.2f, 2.2f);
+                spawnYPosition = player.transform.position.y + 7f;
                 
                 randomGameObjects[currentShape++].transform.position = new Vector2(spawnXPosition, spawnYPosition);
                 
@@ -103,9 +120,38 @@ public class Gameplay : MonoBehaviour {
                 }
 
             }
-        }
 
-        displayScore.text = score.ToString();
+            if(score%10==0 && score!=0 && check2<1)
+            {
+                speed = speed + 1.5f;
+                check2++;
+                //player.GetComponent<SpriteRenderer>().sprite = ovalPlayer;
+                //player.tag = "Oval";
+            }
+
+            if(score%10!=0)
+            {
+                check2 = 0;
+            }
+
+            if(distance%50==0 && distance!=0 && check<1)
+            {
+                fuel -= 2;
+                check++;
+                spawnRate -= .1f;
+            }
+
+            if(distance%50!=0)
+            {
+                check = 0;
+            }
+
+            Debug.Log(fuel);
+
+            displayFuel.text = "Fuel: " + fuel.ToString();
+            displayDistance.text = distance.ToString();
+
+        }
 		
 	}
 

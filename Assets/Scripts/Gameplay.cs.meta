@@ -3,7 +3,17 @@ guid: 5eaed384baf439342aed41ab6e1b13cb
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - player: {instanceID: 0}
+  - gameOverText: {instanceID: 0}
+  - oval: {instanceID: 0}
+  - triangle: {instanceID: 0}
+  - square: {instanceID: 0}
+  - retry: {instanceID: 0}
+  - trianglePlayer: {fileID: 21300000, guid: 2e71493526484da42a3add49c055ae37, type: 3}
+  - ovalPlayer: {fileID: 21300000, guid: e2276424f79e2b74990d824009f88473, type: 3}
+  - squarePlayer: {fileID: 21300000, guid: 5120bb7cfebc40542bf843aab0cc7980, type: 3}
+  - displayScore: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
