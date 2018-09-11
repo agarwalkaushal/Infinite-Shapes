@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\Gameplay.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\Rotation.cs" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>C:/Users/HP/Documents/GitHub/Infinite-Shapes/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>

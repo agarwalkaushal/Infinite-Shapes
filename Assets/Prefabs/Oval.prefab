@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212016210582556334}
   - component: {fileID: 50192772052339292}
   - component: {fileID: 58905083548278952}
+  - component: {fileID: 114721565747877132}
   m_Layer: 0
   m_Name: Oval
   m_TagString: Oval
@@ -77,6 +78,17 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2.75
+--- !u!114 &114721565747877132
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1505905054336062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a10cd154b27b9c4098343a056382ef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212016210582556334
 SpriteRenderer:
   m_ObjectHideFlags: 1

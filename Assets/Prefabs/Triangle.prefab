@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212022163065258898}
   - component: {fileID: 50128214861866714}
   - component: {fileID: 60180373757760226}
+  - component: {fileID: 114984564403236834}
   m_Layer: 0
   m_Name: Triangle
   m_TagString: Triangle
@@ -93,6 +94,17 @@ PolygonCollider2D:
       - {x: 2.56, y: -2.56}
       - {x: 2.56, y: -2.52}
       - {x: 0.02, y: 2.56}
+--- !u!114 &114984564403236834
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1167657837647640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a10cd154b27b9c4098343a056382ef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212022163065258898
 SpriteRenderer:
   m_ObjectHideFlags: 1

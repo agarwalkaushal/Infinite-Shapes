@@ -44,8 +44,7 @@ public class Gameplay : MonoBehaviour {
     public Text displayDistance;
 
     private GameObject[] gameObjects;
-    private List<GameObject> randomGameObjects;
-    private List<int> offBoundShapes;
+    private GameObject randomGameObject;
 
     // Use this for initialization
     void Start () {
@@ -56,8 +55,6 @@ public class Gameplay : MonoBehaviour {
         startGame = true;
         gameOver = false;
         gameObjects = new GameObject[3];
-        randomGameObjects = new List<GameObject>();
-        offBoundShapes = new List<int>();
         gameObjects[0] = oval;
         gameObjects[1] = triangle;
         gameObjects[2] = square;
@@ -84,23 +81,6 @@ public class Gameplay : MonoBehaviour {
         {
             transform.Translate(Vector2.up * Time.deltaTime * speed);
             distance = (int)transform.position.y;
-
-            //loop through all instantiated prefabs
-            for(int i = 0; i < randomGameObjects.Count; i++)
-                randomGameObjects[i].transform.RotateAround(randomGameObjects[i].transform.position, Vector3.back, 90 * Time.deltaTime);
-
-            /*
-            for(int i = 0; i < randomGameObjects.Count; i++)
-            {
-                if (player.transform.position.y - randomGameObjects[i].transform.position.y > 5f)
-                    offBoundShapes.Add(i);
-            }
-
-            for(int i = 0; i < offBoundShapes.Count; i++)
-            {
-                randomGameObjects.RemoveAt(offBoundShapes[i]);
-            }
-            */
             
             if (timeSinceLastSpawned >= spawnRate)
             {
@@ -109,8 +89,8 @@ public class Gameplay : MonoBehaviour {
                 spawnYPosition = player.transform.position.y + 7f;
 
                 randomPrefabIndex = Random.Range(0, 3);
-                randomGameObjects.Add(Instantiate(gameObjects[randomPrefabIndex], objectPoolPosition, Quaternion.identity));
-                randomGameObjects[currentShape++].transform.position = new Vector2(spawnXPosition, spawnYPosition);
+                randomGameObject = Instantiate(gameObjects[randomPrefabIndex], objectPoolPosition, Quaternion.identity);
+                randomGameObject.transform.position = new Vector2(spawnXPosition, spawnYPosition);
 
 
             }
@@ -192,5 +172,10 @@ public class Gameplay : MonoBehaviour {
     public void Retry()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Destroy(other.gameObject);
     }
 }
