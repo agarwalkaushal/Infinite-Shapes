@@ -44,25 +44,23 @@ public class Gameplay : MonoBehaviour {
     public Text displayDistance;
 
     private GameObject[] gameObjects;
-    private GameObject[] randomGameObjects;
-    private Rigidbody2D[] rbs;
+    private List<GameObject> randomGameObjects;
+    private List<int> offBoundShapes;
 
     // Use this for initialization
     void Start () {
 
         score = 0;
-        fuel = 0;
+        fuel = 5;
         distance = 0;
         startGame = true;
         gameOver = false;
         gameObjects = new GameObject[3];
-        randomGameObjects = new GameObject[6];
-        rbs = new Rigidbody2D[6];
+        randomGameObjects = new List<GameObject>();
+        offBoundShapes = new List<int>();
         gameObjects[0] = oval;
         gameObjects[1] = triangle;
         gameObjects[2] = square;
-
-        SpawnRandom();
         
 
     }
@@ -72,6 +70,9 @@ public class Gameplay : MonoBehaviour {
 
         timeSinceLastSpawned += Time.deltaTime;
 
+        if (fuel <= 0)
+            gameOver = true;
+
         if(gameOver)
         {
             gameOverText.SetActive(true);
@@ -79,31 +80,38 @@ public class Gameplay : MonoBehaviour {
             retry.SetActive(true);
         }
 
-        if (startGame && !gameOver)
+        if (startGame && !gameOver && fuel > 0)
         {
             transform.Translate(Vector2.up * Time.deltaTime * speed);
             distance = (int)transform.position.y;
 
             //loop through all instantiated prefabs
-            for(int i = 0; i < 6; i++)
-            {                
-                //Rotate instantiated prefabs
+            for(int i = 0; i < randomGameObjects.Count; i++)
                 randomGameObjects[i].transform.RotateAround(randomGameObjects[i].transform.position, Vector3.back, 90 * Time.deltaTime);
+
+            /*
+            for(int i = 0; i < randomGameObjects.Count; i++)
+            {
+                if (player.transform.position.y - randomGameObjects[i].transform.position.y > 5f)
+                    offBoundShapes.Add(i);
             }
+
+            for(int i = 0; i < offBoundShapes.Count; i++)
+            {
+                randomGameObjects.RemoveAt(offBoundShapes[i]);
+            }
+            */
             
             if (timeSinceLastSpawned >= spawnRate)
             {
                 timeSinceLastSpawned = 0;
                 spawnXPosition = Random.Range(-2.2f, 2.2f);
                 spawnYPosition = player.transform.position.y + 7f;
-                
+
+                randomPrefabIndex = Random.Range(0, 3);
+                randomGameObjects.Add(Instantiate(gameObjects[randomPrefabIndex], objectPoolPosition, Quaternion.identity));
                 randomGameObjects[currentShape++].transform.position = new Vector2(spawnXPosition, spawnYPosition);
-                
-                if(currentShape>5)
-                {
-                    SpawnRandom();
-                    currentShape = 0;
-                }
+
 
             }
 
@@ -111,6 +119,7 @@ public class Gameplay : MonoBehaviour {
             {
                 speed = speed + 1.5f;
                 check2++;
+                spawnRate -= .1f;
 
                 if (player.tag == "Triangle")
                 {
@@ -159,21 +168,19 @@ public class Gameplay : MonoBehaviour {
             if(score%10!=0)
             {
                 check2 = 0;
+
             }
 
-            if(distance%50==0 && distance!=0 && check<1)
+            if(distance%20==0 && distance!=0 && check<1)
             {
-                fuel -= 2;
+                fuel -= 1;
                 check++;
-                spawnRate -= .1f;
             }
 
-            if(distance%50!=0)
+            if(distance%20!=0)
             {
                 check = 0;
             }
-
-            Debug.Log(fuel);
 
             displayFuel.text = "Fuel: " + fuel.ToString();
             displayDistance.text = distance.ToString();
@@ -181,26 +188,6 @@ public class Gameplay : MonoBehaviour {
         }
 		
 	}
-
-    /*
-    void DestroyAll()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            Destroy(randomGameObjects[i]);
-        }
-    }
-    */
-
-    void SpawnRandom()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            randomPrefabIndex = Random.Range(0, 3);
-            randomGameObjects[i] = Instantiate(gameObjects[randomPrefabIndex], objectPoolPosition, Quaternion.identity);
-            rbs[i] = randomGameObjects[i].GetComponent<Rigidbody2D>();
-        }
-    }
 
     public void Retry()
     {

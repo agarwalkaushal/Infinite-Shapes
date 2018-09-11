@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetKey(KeyCode.D))
                 transform.Translate(Vector2.right * Time.deltaTime * 10);
 
-            transform.Translate(Input.acceleration.x * Time.deltaTime * 10,0,0);
+            transform.Translate(Input.acceleration.x * Time.deltaTime * 11.5f,0,0);
         }
 
     }
