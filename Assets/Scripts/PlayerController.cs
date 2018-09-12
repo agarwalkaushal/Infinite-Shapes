@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    public Camera camera;
+
+    public float swipeSpeed = 4f;
 
     private int c = 0;
+    private int horizontal;
+
+    private bool canInvoke = true;
+
+    private Vector2 touchOrigin;
 
     private Gameplay gameplay;
 
-    // Use this for initialization
+    private Rigidbody2D rbd;
+
     void Start()
     {
-        Camera camera = Camera.main;
+        rbd = GetComponent<Rigidbody2D>();
         gameplay = camera.GetComponent<Gameplay>();
     }
 
@@ -39,7 +48,43 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetKey(KeyCode.D))
                 transform.Translate(Vector2.right * Time.deltaTime * 10);
 
-            transform.Translate(Input.acceleration.x * Time.deltaTime * 11.5f,0,0);
+            //Swiping to move player
+            if(Input.touchCount > 0 && Time.timeScale > 0.0f)
+            {
+                Touch myTouch = Input.touches[0];
+
+                if (myTouch.phase == TouchPhase.Began)
+                {
+                    touchOrigin = myTouch.position;
+                }
+                else if (myTouch.phase != TouchPhase.Ended && myTouch.phase != TouchPhase.Canceled)
+                {
+                    float x = myTouch.position.x - touchOrigin.x;
+                    Vector2 direction = myTouch.position - touchOrigin;
+                    if (Mathf.Abs(x) > 1f)
+                    {
+                        if (Mathf.Sign(direction.x) > 0)
+                        {
+                            horizontal = 1;
+                            rbd.velocity = new Vector2(horizontal * swipeSpeed, 0f);
+                        }
+                        else if (Mathf.Sign(direction.x) < 0)
+                        {
+                            horizontal = -1;
+                            rbd.velocity = new Vector2(horizontal * swipeSpeed, 0f);
+                        }
+                        else
+                            horizontal = 0;
+                    }
+                        
+                }
+                else if (myTouch.phase == TouchPhase.Ended)
+                {
+                    touchOrigin.x = -1;
+                    rbd.velocity = Vector2.zero;
+                }
+            }
+
         }
 
     }

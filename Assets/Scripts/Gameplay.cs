@@ -13,21 +13,7 @@ public class Gameplay : MonoBehaviour {
     public static int fuel;
     public static int distance;
 
-    public float speed = 3.5f; //speed of the player,camera
-
-    private int randomPrefabIndex;
-    private int currentShape=0;
-    private int check = 0;
-    private int check2 = 0;
-
-    private float timeSinceLastDestroyed;
-    private float timeSinceLastSpawned;
-    private float destroyRate = 10f;
-    private float spawnRate = 1f;
-    private float spawnXPosition;
-    private float spawnYPosition;
-
-    private Vector2 objectPoolPosition = new Vector2(0f, -6f);
+    public float speed = 4f; //speed of the player,camera
 
     public GameObject player;
     public GameObject gameOverText;
@@ -43,12 +29,33 @@ public class Gameplay : MonoBehaviour {
     public Text displayFuel;
     public Text displayDistance;
 
+    private int randomPrefabIndex;
+    private int currentShape=0;
+    private int check = 0;
+    private int check2 = 0;
+
+    private float timeSinceLastDestroyed;
+    private float timeSinceLastSpawned;
+    private float destroyRate = 10f;
+    private float spawnRate = .8f;
+    private float spawnXPosition;
+    private float spawnYPosition;
+
+    private Vector2 objectPoolPosition = new Vector2(0f, -6f);
+
+    private PlayerController playerController;
+
     private GameObject[] gameObjects;
     private GameObject randomGameObject;
+
+
+
+
 
     // Use this for initialization
     void Start () {
 
+        playerController = player.GetComponent<PlayerController>();
         score = 0;
         fuel = 5;
         distance = 0;
@@ -97,9 +104,11 @@ public class Gameplay : MonoBehaviour {
 
             if(score%10==0 && score!=0 && check2<1)
             {
-                speed = speed + 1.5f;
+                speed = speed + 1.25f;
+                playerController.swipeSpeed = playerController.swipeSpeed + 1f;
                 check2++;
-                spawnRate -= .1f;
+                if(spawnRate<=.2f)
+                    spawnRate -= .2f;
 
                 if (player.tag == "Triangle")
                 {
@@ -151,13 +160,13 @@ public class Gameplay : MonoBehaviour {
 
             }
 
-            if(distance%20==0 && distance!=0 && check<1)
+            if(distance%10==0 && distance!=0 && check<1)
             {
                 fuel -= 1;
                 check++;
             }
 
-            if(distance%20!=0)
+            if(distance%10!=0)
             {
                 check = 0;
             }
