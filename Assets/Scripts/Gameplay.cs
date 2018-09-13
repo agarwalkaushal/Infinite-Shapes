@@ -91,6 +91,7 @@ public class Gameplay : MonoBehaviour {
 
         if(gameOver && goc==0)
         {
+            boxCollider2D.offset = new Vector2(0, 0);
             if (fuel <= 0)
             {
                 gameOverFuel.SetActive(true);
@@ -116,7 +117,7 @@ public class Gameplay : MonoBehaviour {
             transform.Translate(Vector2.up * Time.deltaTime * speed);
             distance = (int)transform.position.y;
 
-            
+            //Spawing shapes randomly after the spawnRate expires
             if (timeSinceLastSpawned >= spawnRate)
             {
                 timeSinceLastSpawned = 0;
@@ -130,11 +131,11 @@ public class Gameplay : MonoBehaviour {
 
             }
 
+            //Checks score every 10's multiple. Changes shapes and background color randomly
             if(score%10==0 && score!=0 && check2<1)
             {
                 speed = speed + 1f;
                 playerController.swipeSpeed = playerController.swipeSpeed + 1f;
-                boxCollider2D.offset = new Vector2(0, 0);
                 Time.timeScale = 0.1f;
                 check2++;
                 if(spawnRate>=.15f)
@@ -192,7 +193,6 @@ public class Gameplay : MonoBehaviour {
             else
             {
                 Time.timeScale = 1;
-                boxCollider2D.offset = new Vector2(0, -6.5f);
             }
           
             if(score%10!=0)
@@ -200,6 +200,7 @@ public class Gameplay : MonoBehaviour {
                 check2 = 0;
             }
 
+            //Check every 10 units of distance covered, reduces fuel by 1
             if(distance%10==0 && distance!=0 && check<1)
             {
                 fuel -= 1;
