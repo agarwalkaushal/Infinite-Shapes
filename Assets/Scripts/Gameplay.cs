@@ -13,14 +13,19 @@ public class Gameplay : MonoBehaviour {
     public static int fuel;
     public static int distance;
 
-    public float speed = 4f; //speed of the player,camera
+    public float speed = 5f; //speed of the player,camera
+    public float spawnRate = .9f;
 
     public GameObject player;
     public GameObject gameOverText;
+    public GameObject gameOverFuel;
     public GameObject oval;
     public GameObject triangle;
     public GameObject square;
     public GameObject retry;
+    public GameObject warning;
+
+    public Camera cam;
 
     public Sprite trianglePlayer;
     public Sprite ovalPlayer;
@@ -28,16 +33,19 @@ public class Gameplay : MonoBehaviour {
 
     public Text displayFuel;
     public Text displayDistance;
+    public Text finalScoreT;
+    public Text finalScoreF;
 
     private int randomPrefabIndex;
     private int currentShape=0;
     private int check = 0;
     private int check2 = 0;
+    private int goc = 0;
 
     private float timeSinceLastDestroyed;
     private float timeSinceLastSpawned;
     private float destroyRate = 10f;
-    private float spawnRate = .8f;
+
     private float spawnXPosition;
     private float spawnYPosition;
 
@@ -45,17 +53,21 @@ public class Gameplay : MonoBehaviour {
 
     private PlayerController playerController;
 
+    private BoxCollider2D boxCollider2D;
+
     private GameObject[] gameObjects;
     private GameObject randomGameObject;
 
-
-
-
+    public Color color1;
+    public Color color2;
+    public Color color3;
 
     // Use this for initialization
     void Start () {
 
+        boxCollider2D = GetComponent<BoxCollider2D>();
         playerController = player.GetComponent<PlayerController>();
+        cam = GetComponent<Camera>();
         score = 0;
         fuel = 5;
         distance = 0;
@@ -77,17 +89,33 @@ public class Gameplay : MonoBehaviour {
         if (fuel <= 0)
             gameOver = true;
 
-        if(gameOver)
+        if(gameOver && goc==0)
         {
-            gameOverText.SetActive(true);
+            if (fuel <= 0)
+            {
+                gameOverFuel.SetActive(true);
+                finalScoreF.text = displayDistance.text;
+            }
+            else
+            {
+                gameOverText.SetActive(true);
+                finalScoreT.text = displayDistance.text;
+            }
+
             player.SetActive(false);
             retry.SetActive(true);
+            warning.SetActive(false);
+            displayFuel.text = "";
+            displayDistance.text = "";
+
+            goc++;
         }
 
         if (startGame && !gameOver && fuel > 0)
         {
             transform.Translate(Vector2.up * Time.deltaTime * speed);
             distance = (int)transform.position.y;
+
             
             if (timeSinceLastSpawned >= spawnRate)
             {
@@ -104,11 +132,13 @@ public class Gameplay : MonoBehaviour {
 
             if(score%10==0 && score!=0 && check2<1)
             {
-                speed = speed + 1.25f;
+                speed = speed + 1f;
                 playerController.swipeSpeed = playerController.swipeSpeed + 1f;
+                boxCollider2D.offset = new Vector2(0, 0);
+                Time.timeScale = 0.1f;
                 check2++;
-                if(spawnRate<=.2f)
-                    spawnRate -= .2f;
+                if(spawnRate>=.15f)
+                    spawnRate -= .15f;
 
                 if (player.tag == "Triangle")
                 {
@@ -117,11 +147,13 @@ public class Gameplay : MonoBehaviour {
                     {
                         player.GetComponent<SpriteRenderer>().sprite = ovalPlayer;
                         player.tag = "Oval";
+                        cam.backgroundColor = color2;
                     }
                     else
                     {
                         player.GetComponent<SpriteRenderer>().sprite = squarePlayer;
                         player.tag = "Square";
+                        cam.backgroundColor = color3;
                     }
                 }
                 else if (player.tag == "Oval")
@@ -131,11 +163,13 @@ public class Gameplay : MonoBehaviour {
                     {
                         player.GetComponent<SpriteRenderer>().sprite = squarePlayer;
                         player.tag = "Square";
+                        cam.backgroundColor = color3;
                     }
                     else
                     {
                         player.GetComponent<SpriteRenderer>().sprite = trianglePlayer;
                         player.tag = "Triangle";
+                        cam.backgroundColor = color1;
                     }
                 }
                 else
@@ -145,30 +179,38 @@ public class Gameplay : MonoBehaviour {
                     {
                         player.GetComponent<SpriteRenderer>().sprite = ovalPlayer;
                         player.tag = "Oval";
+                        cam.backgroundColor = color2;
                     }
                     else
                     {
                         player.GetComponent<SpriteRenderer>().sprite = trianglePlayer;
                         player.tag = "Triangle";
+                        cam.backgroundColor = color1;
                     }
                 }
             }
-
+            else
+            {
+                Time.timeScale = 1;
+                boxCollider2D.offset = new Vector2(0, -6.5f);
+            }
+          
             if(score%10!=0)
             {
                 check2 = 0;
-
             }
 
             if(distance%10==0 && distance!=0 && check<1)
             {
                 fuel -= 1;
                 check++;
+                warning.SetActive(true);
             }
 
             if(distance%10!=0)
             {
                 check = 0;
+                warning.SetActive(false);
             }
 
             displayFuel.text = "Fuel: " + fuel.ToString();

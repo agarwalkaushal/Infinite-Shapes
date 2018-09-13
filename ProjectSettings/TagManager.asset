@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Triangle
+  - LW
+  - UW
+  - Undefined
+  - Square
+  - Oval
   layers:
   - Default
   - TransparentFX

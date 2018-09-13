@@ -98,7 +98,6 @@ public class PlayerController : MonoBehaviour {
             other.gameObject.SetActive(false);
             Gameplay.score++;
             Gameplay.fuel++;
-            Debug.Log(Gameplay.score);
         }
     }
 }
