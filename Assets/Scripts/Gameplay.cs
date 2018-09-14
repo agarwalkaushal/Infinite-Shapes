@@ -14,7 +14,7 @@ public class Gameplay : MonoBehaviour {
     public static int distance;
 
     public float speed = 5f; //speed of the player,camera
-    public float spawnRate = .9f;
+    public float spawnRate = .8f;
 
     public GameObject player;
     public GameObject gameOverText;
@@ -61,6 +61,9 @@ public class Gameplay : MonoBehaviour {
     public Color color1;
     public Color color2;
     public Color color3;
+    public Color color4;
+    public Color color5;
+    public Color color6;
 
     // Use this for initialization
     void Start () {
@@ -88,6 +91,12 @@ public class Gameplay : MonoBehaviour {
 
         if (fuel <= 0)
             gameOver = true;
+        else if (fuel < 5)
+            displayFuel.color = color4;
+        else if (fuel < 10)
+            displayFuel.color = color5;
+        else
+            displayFuel.color = color6; 
 
         if(gameOver && goc==0)
         {
@@ -138,8 +147,8 @@ public class Gameplay : MonoBehaviour {
                 playerController.swipeSpeed = playerController.swipeSpeed + 1f;
                 Time.timeScale = 0.1f;
                 check2++;
-                if(spawnRate>=.15f)
-                    spawnRate -= .15f;
+                if(spawnRate>=.3f)
+                    spawnRate -= .1f;
 
                 if (player.tag == "Triangle")
                 {
