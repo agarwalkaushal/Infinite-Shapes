@@ -242,7 +242,7 @@ PlayerSettings:
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: F:/Unity/user.keystore
-  AndroidKeyaliasName: 
+  AndroidKeyaliasName: unity
   AndroidTVCompatibility: 0
   AndroidIsGame: 1
   AndroidEnableTango: 0
