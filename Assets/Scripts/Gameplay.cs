@@ -1,9 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Sprites;
+using UnityEngine.Audio;
 
 public class Gameplay : MonoBehaviour {
 
@@ -38,6 +38,9 @@ public class Gameplay : MonoBehaviour {
     public Text finalScoreT;
     public Text finalScoreF;
     public Text displayHighScore;
+
+    public AudioSource gameover;
+    public AudioSource backgroundMusic;
 
     private int randomPrefabIndex;
     private int currentShape=0;
@@ -101,6 +104,10 @@ public class Gameplay : MonoBehaviour {
 
        if (gameOver && goc==0)
         {
+            backgroundMusic.Stop();
+            gameover.Play();
+
+
             if(PlayerPrefs.HasKey("highScore") && check3==1)
             {
                 displayHighScore.text = "High Score: " + distance.ToString();
@@ -140,8 +147,10 @@ public class Gameplay : MonoBehaviour {
         if (startGame && !gameOver && fuel > 0)
         {
 
-           if (fuel < 5)
+            if (fuel < 5)
+            {
                 displayFuel.color = color4;
+            }
             else if (fuel < 10)
                 displayFuel.color = color5;
             else

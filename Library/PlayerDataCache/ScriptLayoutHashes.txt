@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-F:/Unity/Infinite Shapes.apk
+F:/Tutorials,Notes & Data/EXTRAs/Play Store/Infinite Shapes/release.apk
 SceneListBegin?
 Assets/Scenes/MainMenu.unity
 Assets/Scenes/Main.unity
@@ -110,7 +110,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 e1ea1240cd3f61e950dcffd6f32a621f Assembly-CSharp.dll:.PlayerController
-b641a75b64148afbfd10f6145bfc06cc Assembly-CSharp.dll:.Gameplay
+705d9235bbe742e71c5d580613799796 Assembly-CSharp.dll:.Gameplay
 322cb40e1e282f28af980cbef7922a90 UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsEventTracker
 dc07d7ad69b399a46e92c483bf1c04ca UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsTracker
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
