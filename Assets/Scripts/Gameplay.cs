@@ -24,6 +24,8 @@ public class Gameplay : MonoBehaviour {
     public GameObject square;
     public GameObject retry;
     public GameObject warning;
+    public GameObject highScore;
+    public GameObject newHighScore;
 
     public Camera cam;
 
@@ -35,12 +37,15 @@ public class Gameplay : MonoBehaviour {
     public Text displayDistance;
     public Text finalScoreT;
     public Text finalScoreF;
+    public Text displayHighScore;
 
     private int randomPrefabIndex;
     private int currentShape=0;
     private int check = 0;
     private int check2 = 0;
+    private int check3 = 0;
     private int goc = 0;
+    private int hScore;
 
     private float timeSinceLastDestroyed;
     private float timeSinceLastSpawned;
@@ -80,7 +85,9 @@ public class Gameplay : MonoBehaviour {
         gameObjects[0] = oval;
         gameObjects[1] = triangle;
         gameObjects[2] = square;
-        
+
+        if (PlayerPrefs.HasKey("highScore"))
+            hScore = PlayerPrefs.GetInt("highScore");
 
     }
 
@@ -91,15 +98,24 @@ public class Gameplay : MonoBehaviour {
 
         if (fuel <= 0)
             gameOver = true;
-        else if (fuel < 5)
-            displayFuel.color = color4;
-        else if (fuel < 10)
-            displayFuel.color = color5;
-        else
-            displayFuel.color = color6; 
 
-        if(gameOver && goc==0)
+       if (gameOver && goc==0)
         {
+            if(PlayerPrefs.HasKey("highScore") && check3==1)
+            {
+                displayHighScore.text = "High Score: " + distance.ToString();
+                PlayerPrefs.SetInt("highScore", distance);                
+            }
+            else if(!PlayerPrefs.HasKey("highScore"))
+            {
+                displayHighScore.text = "High Score: " + distance.ToString();
+                PlayerPrefs.SetInt("highScore", distance);
+            }
+            else
+                displayHighScore.text = "High Score: " + hScore.ToString();
+
+            highScore.SetActive(true);
+
             boxCollider2D.offset = new Vector2(0, 0);
             if (fuel <= 0)
             {
@@ -123,6 +139,14 @@ public class Gameplay : MonoBehaviour {
 
         if (startGame && !gameOver && fuel > 0)
         {
+
+           if (fuel < 5)
+                displayFuel.color = color4;
+            else if (fuel < 10)
+                displayFuel.color = color5;
+            else
+                displayFuel.color = color6;
+
             transform.Translate(Vector2.up * Time.deltaTime * speed);
             distance = (int)transform.position.y;
 
@@ -223,12 +247,26 @@ public class Gameplay : MonoBehaviour {
                 warning.SetActive(false);
             }
 
+            if(PlayerPrefs.HasKey("highScore") && distance > hScore && check3<1)
+            {
+                StartCoroutine(displayNewHigScore());
+                check3++;
+            }
+            
             displayFuel.text = "Fuel: " + fuel.ToString();
             displayDistance.text = distance.ToString();
 
         }
 		
 	}
+
+    private IEnumerator displayNewHigScore()
+    {
+        newHighScore.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        newHighScore.SetActive(false);
+
+    }
 
     public void Retry()
     {
