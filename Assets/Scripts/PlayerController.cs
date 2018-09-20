@@ -4,7 +4,8 @@ public class PlayerController : MonoBehaviour {
 
     public Camera camera;
 
-    public float swipeSpeed = 4f;
+    public float swipeSpeed;
+    private float x;
 
     private int c = 0;
     private int horizontal;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour {
         Vector2 clampedPosition = transform.position;
         // Now we can manipulte it to clamp the y element
         clampedPosition.x = Mathf.Clamp(transform.position.x, -2.25f,2.25f);
+       
         // re-assigning the transform's position will clamp it
         transform.position = clampedPosition;
 
@@ -46,43 +48,22 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetKey(KeyCode.D))
                 transform.Translate(Vector2.right * Time.deltaTime * 10);
 
-            //Swiping to move player
-            if(Input.touchCount > 0 && Time.timeScale > 0.0f)
+
+            //Using touch.deltaposition 
+
+            if(Input.touchCount > 0)
             {
-                Touch myTouch = Input.touches[0];
+                Touch myTouch = Input.GetTouch(0);
+                rbd.velocity = Vector2.zero;
 
-                if (myTouch.phase == TouchPhase.Began)
+                if (Input.GetTouch(0).phase == TouchPhase.Moved)
                 {
-                    touchOrigin = myTouch.position;
-                }
-                else if (myTouch.phase != TouchPhase.Ended && myTouch.phase != TouchPhase.Canceled)
-                {
-                    float x = myTouch.position.x - touchOrigin.x;
-                    Vector2 direction = myTouch.position - touchOrigin;
-                    if (Mathf.Abs(x) > 1f)
-                    {
-                        if (Mathf.Sign(direction.x) > 0)
-                        {
-                            horizontal = 1;
-                            rbd.velocity = new Vector2(horizontal * swipeSpeed, 0f);
-                        }
-                        else if (Mathf.Sign(direction.x) < 0)
-                        {
-                            horizontal = -1;
-                            rbd.velocity = new Vector2(horizontal * swipeSpeed, 0f);
-                        }
-                        else
-                            horizontal = 0;
-                    }
-                        
-                }
-                else if (myTouch.phase == TouchPhase.Ended)
-                {
-                    touchOrigin.x = -1;
-                    rbd.velocity = Vector2.zero;
-                }
+                    x = myTouch.deltaPosition.x;
+
+                    rbd.velocity = new Vector2(0.4f*x,0);
+                }       
+                
             }
-
         }
 
     }

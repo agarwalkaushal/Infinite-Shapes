@@ -180,7 +180,7 @@ public class Gameplay : MonoBehaviour {
                 playerController.swipeSpeed = playerController.swipeSpeed + 1f;
                 Time.timeScale = 0.1f;
                 check2++;
-                if(spawnRate>=.3f)
+                if(spawnRate>=.2f)
                     spawnRate -= .1f;
 
                 if (player.tag == "Triangle")
@@ -243,14 +243,14 @@ public class Gameplay : MonoBehaviour {
             }
 
             //Check every 10 units of distance covered, reduces fuel by 1
-            if(distance%10==0 && distance!=0 && check<1)
+            if(distance%15==0 && distance!=0 && check<1)
             {
                 fuel -= 1;
                 check++;
                 warning.SetActive(true);
             }
 
-            if(distance%10!=0)
+            if(distance%15!=0)
             {
                 check = 0;
                 warning.SetActive(false);
