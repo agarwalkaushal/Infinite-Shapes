@@ -23,9 +23,9 @@ public class Gameplay : MonoBehaviour {
     public GameObject triangle;
     public GameObject square;
     public GameObject retry;
-    public GameObject warning;
     public GameObject highScore;
     public GameObject newHighScore;
+    public GameObject count;
 
     public Camera cam;
 
@@ -43,6 +43,7 @@ public class Gameplay : MonoBehaviour {
     public AudioSource backgroundMusic;
 
     private int randomPrefabIndex;
+    private int fuelMilage;
     private int currentShape=0;
     private int check = 0;
     private int check2 = 0;
@@ -95,7 +96,7 @@ public class Gameplay : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void FixedUpdate () {
 
         timeSinceLastSpawned += Time.deltaTime;
 
@@ -137,7 +138,6 @@ public class Gameplay : MonoBehaviour {
 
             player.SetActive(false);
             retry.SetActive(true);
-            warning.SetActive(false);
             displayFuel.text = "";
             displayDistance.text = "";
 
@@ -157,7 +157,9 @@ public class Gameplay : MonoBehaviour {
                 displayFuel.color = color6;
 
             transform.Translate(Vector2.up * Time.deltaTime * speed);
+            count.transform.Translate(Vector2.up * Time.deltaTime * speed);
             distance = (int)transform.position.y;
+            fuelMilage = (int)count.transform.position.y;
 
             //Spawing shapes randomly after the spawnRate expires
             if (timeSinceLastSpawned >= spawnRate)
@@ -238,23 +240,17 @@ public class Gameplay : MonoBehaviour {
             }
           
             if(score%10!=0)
-            {
                 check2 = 0;
-            }
 
-            //Check every 10 units of distance covered, reduces fuel by 1
-            if(distance%15==0 && distance!=0 && check<1)
+            //Check every 15 units of distance covered, reduces fuel by 1
+            if(fuelMilage%15==0 && fuelMilage!=0 && check<1)
             {
                 fuel -= 1;
                 check++;
-                warning.SetActive(true);
             }
 
-            if(distance%15!=0)
-            {
+            if(fuelMilage%15!=0)
                 check = 0;
-                warning.SetActive(false);
-            }
 
             if(PlayerPrefs.HasKey("highScore") && distance > hScore && check3<1)
             {

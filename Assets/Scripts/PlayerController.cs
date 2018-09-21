@@ -5,7 +5,9 @@ public class PlayerController : MonoBehaviour {
     public Camera camera;
 
     public float swipeSpeed;
+
     private float x;
+    private float smoothness = 0.3f;
 
     private int c = 0;
     private int horizontal;
@@ -60,7 +62,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     x = myTouch.deltaPosition.x;
 
-                    rbd.velocity = new Vector2(0.4f*x,0);
+                    rbd.velocity = new Vector2(smoothness*x,0);
                 }       
                 
             }
