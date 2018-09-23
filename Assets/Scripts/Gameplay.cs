@@ -10,11 +10,11 @@ public class Gameplay : MonoBehaviour {
     public static bool startGame;
     public static bool gameOver;
     public static int score;
-    public static int fuel;
     public static int distance;
 
     public float speed = 5f; //speed of the player,camera
     public float spawnRate = .8f;
+    public float fuel;
 
     public GameObject player;
     public GameObject gameOverText;
@@ -26,6 +26,9 @@ public class Gameplay : MonoBehaviour {
     public GameObject highScore;
     public GameObject newHighScore;
     public GameObject count;
+    public GameObject fuelSliderG;
+    public GameObject fuelPump;
+    public GameObject road;
 
     public Camera cam;
 
@@ -33,7 +36,10 @@ public class Gameplay : MonoBehaviour {
     public Sprite ovalPlayer;
     public Sprite squarePlayer;
 
-    public Text displayFuel;
+    public Slider fuelSlider;
+
+    public Image fuelFill;
+
     public Text displayDistance;
     public Text finalScoreT;
     public Text finalScoreF;
@@ -81,7 +87,7 @@ public class Gameplay : MonoBehaviour {
         playerController = player.GetComponent<PlayerController>();
         cam = GetComponent<Camera>();
         score = 0;
-        fuel = 5;
+        fuel = 2.5f;
         distance = 0;
         startGame = true;
         gameOver = false;
@@ -89,6 +95,7 @@ public class Gameplay : MonoBehaviour {
         gameObjects[0] = oval;
         gameObjects[1] = triangle;
         gameObjects[2] = square;
+        fuelSlider.value = fuel/10;
 
         if (PlayerPrefs.HasKey("highScore"))
             hScore = PlayerPrefs.GetInt("highScore");
@@ -98,6 +105,8 @@ public class Gameplay : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate () {
 
+        Debug.Log(fuel);
+
         timeSinceLastSpawned += Time.deltaTime;
 
         if (fuel <= 0)
@@ -105,9 +114,11 @@ public class Gameplay : MonoBehaviour {
 
        if (gameOver && goc==0)
         {
+            fuelPump.SetActive(false);
+            road.SetActive(false);
             backgroundMusic.Stop();
             gameover.Play();
-
+            fuelSliderG.SetActive(false);
 
             if(PlayerPrefs.HasKey("highScore") && check3==1)
             {
@@ -127,7 +138,7 @@ public class Gameplay : MonoBehaviour {
             boxCollider2D.offset = new Vector2(0, 0);
             if (fuel <= 0)
             {
-                gameOverFuel.SetActive(true);
+                gameOverFuel.SetActive(true);                
                 finalScoreF.text = displayDistance.text;
             }
             else
@@ -138,7 +149,6 @@ public class Gameplay : MonoBehaviour {
 
             player.SetActive(false);
             retry.SetActive(true);
-            displayFuel.text = "";
             displayDistance.text = "";
 
             goc++;
@@ -146,15 +156,19 @@ public class Gameplay : MonoBehaviour {
 
         if (startGame && !gameOver && fuel > 0)
         {
+            fuelSlider.value = fuel/10;
 
-            if (fuel < 5)
+            if (fuel < 2.5)
             {
-                displayFuel.color = color4;
+                fuelFill.color = color4;
             }
-            else if (fuel < 10)
-                displayFuel.color = color5;
+            else if (fuel < 5)
+                fuelFill.color = color5;
             else
-                displayFuel.color = color6;
+                fuelFill.color = color6;
+
+            if (fuel > 10)
+                fuel = 10;
 
             transform.Translate(Vector2.up * Time.deltaTime * speed);
             count.transform.Translate(Vector2.up * Time.deltaTime * speed);
@@ -245,7 +259,7 @@ public class Gameplay : MonoBehaviour {
             //Check every 15 units of distance covered, reduces fuel by 1
             if(fuelMilage%15==0 && fuelMilage!=0 && check<1)
             {
-                fuel -= 1;
+                fuel -= 0.5f;
                 check++;
             }
 
@@ -258,7 +272,6 @@ public class Gameplay : MonoBehaviour {
                 check3++;
             }
             
-            displayFuel.text = "Fuel: " + fuel.ToString();
             displayDistance.text = distance.ToString();
 
         }

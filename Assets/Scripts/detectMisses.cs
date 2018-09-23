@@ -27,7 +27,7 @@ public class detectMisses : MonoBehaviour {
     {
         if (playerTag == other.tag)
         {
-            Gameplay.fuel--;
+            gameplay.fuel -= .5f;
             gameplay.count.transform.position = new Vector3(0, 0, 0);
         }
     }
