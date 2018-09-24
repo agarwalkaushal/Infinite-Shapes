@@ -4,8 +4,6 @@ public class PlayerController : MonoBehaviour {
 
     public Camera camera;
 
-    public float swipeSpeed;
-
     private float x;
     private float smoothness = 0.3f;
 
@@ -72,9 +70,14 @@ public class PlayerController : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag != gameplay.player.tag)
+        int c = 0;
+
+        if (other.gameObject.tag == "Wall")
+            c=1;
+
+        if (other.gameObject.tag != gameplay.player.tag && c==0)
             Gameplay.gameOver = true;
-        else
+        else if(c==0)
         {
             other.gameObject.SetActive(false);
             Gameplay.score++;

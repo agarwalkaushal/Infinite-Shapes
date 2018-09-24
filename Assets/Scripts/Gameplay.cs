@@ -105,8 +105,6 @@ public class Gameplay : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate () {
 
-        Debug.Log(fuel);
-
         timeSinceLastSpawned += Time.deltaTime;
 
         if (fuel <= 0)
@@ -193,11 +191,13 @@ public class Gameplay : MonoBehaviour {
             if(score%10==0 && score!=0 && check2<1)
             {
                 speed = speed + 1f;
-                playerController.swipeSpeed = playerController.swipeSpeed + 1f;
-                Time.timeScale = 0.1f;
                 check2++;
+
                 if(spawnRate>=.2f)
                     spawnRate -= .1f;
+
+                player.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.1f);
+
 
                 if (player.tag == "Triangle")
                 {
@@ -247,6 +247,9 @@ public class Gameplay : MonoBehaviour {
                         cam.backgroundColor = color1;
                     }
                 }
+
+                StartCoroutine(shapeAlphaFadeIn());
+                
             }
             else
             {
@@ -277,6 +280,12 @@ public class Gameplay : MonoBehaviour {
         }
 		
 	}
+
+    private IEnumerator shapeAlphaFadeIn()
+    {
+        yield return new WaitForSeconds(.25f);
+        StartCoroutine(ShapeFade.FadeIn(player,.5f));
+    }
 
     private IEnumerator displayNewHigScore()
     {
