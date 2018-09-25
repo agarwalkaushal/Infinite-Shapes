@@ -5,8 +5,11 @@ using UnityEngine;
 public class zigzigMovement : MonoBehaviour {
 
     private int randomForceValue;
+
     private Rigidbody2D rigidbody2D;
 
+    private float randomForceAddRate = .5f;
+    private float timeSinceForceAdded;
 
     void Start ()
     {
@@ -14,13 +17,19 @@ public class zigzigMovement : MonoBehaviour {
     }
 
     void FixedUpdate () {
-        randomForceValue = Random.Range(-5, 6);
-        StartCoroutine(randomForce());        
+
+        timeSinceForceAdded += Time.deltaTime;
+
+        if (timeSinceForceAdded >= randomForceAddRate)
+        {
+            timeSinceForceAdded = 0;
+            randomForce();
+        }
     }
 
-    private IEnumerator randomForce()
-    {        
-        yield return new WaitForSeconds(1f);
-        rigidbody2D.AddForce(new Vector2(randomForceValue, 0));
+    private void randomForce()
+    {
+        randomForceValue = Random.Range(-1, 2);
+        rigidbody2D.AddForce(new Vector2(randomForceValue*50, 0));
     }
 }

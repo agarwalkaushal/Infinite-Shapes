@@ -23,7 +23,6 @@ public class Gameplay : MonoBehaviour {
     public GameObject triangle;
     public GameObject square;
     public GameObject retry;
-    public GameObject highScore;
     public GameObject newHighScore;
     public GameObject count;
     public GameObject fuelSliderG;
@@ -43,7 +42,6 @@ public class Gameplay : MonoBehaviour {
     public Text displayDistance;
     public Text finalScoreT;
     public Text finalScoreF;
-    public Text displayHighScore;
 
     public AudioSource gameover;
     public AudioSource backgroundMusic;
@@ -105,6 +103,9 @@ public class Gameplay : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate () {
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
+
         timeSinceLastSpawned += Time.deltaTime;
 
         if (fuel <= 0)
@@ -120,18 +121,12 @@ public class Gameplay : MonoBehaviour {
 
             if(PlayerPrefs.HasKey("highScore") && check3==1)
             {
-                displayHighScore.text = "High Score: " + distance.ToString();
                 PlayerPrefs.SetInt("highScore", distance);                
             }
             else if(!PlayerPrefs.HasKey("highScore"))
             {
-                displayHighScore.text = "High Score: " + distance.ToString();
                 PlayerPrefs.SetInt("highScore", distance);
             }
-            else
-                displayHighScore.text = "High Score: " + hScore.ToString();
-
-            highScore.SetActive(true);
 
             boxCollider2D.offset = new Vector2(0, 0);
             if (fuel <= 0)
