@@ -129,6 +129,7 @@ public class Gameplay : MonoBehaviour {
             }
 
             boxCollider2D.offset = new Vector2(0, 0);
+
             if (fuel <= 0)
             {
                 gameOverFuel.SetActive(true);                
@@ -152,9 +153,7 @@ public class Gameplay : MonoBehaviour {
             fuelSlider.value = fuel/10;
 
             if (fuel < 2.5)
-            {
                 fuelFill.color = color4;
-            }
             else if (fuel < 5)
                 fuelFill.color = color5;
             else
