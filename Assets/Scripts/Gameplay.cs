@@ -123,6 +123,13 @@ public class Gameplay : MonoBehaviour {
                 time.text = minuteCount.ToString() + ":0" + ((int)secondCount).ToString();
             else
                 time.text = minuteCount.ToString() + ":" + ((int)secondCount).ToString();
+
+            if (secondCount > 59)
+            {
+                secondCount = 0;
+                minuteCount += 1;
+            }
+
         }
     }
 
