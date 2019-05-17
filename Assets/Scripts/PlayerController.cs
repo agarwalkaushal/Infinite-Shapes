@@ -81,7 +81,9 @@ public class PlayerController : MonoBehaviour {
         {
             other.gameObject.SetActive(false);
             Gameplay.score++;
+            Gameplay.distance += Gameplay.level*10;
             gameplay.fuel+=.5f;
+            c = 1;
         }
     }
 }

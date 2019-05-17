@@ -9,8 +9,11 @@ public class Gameplay : MonoBehaviour {
 
     public static bool startGame;
     public static bool gameOver;
-    public static int score;
-    public static int distance;
+
+    public static int score;    
+    public static int level = 1;
+
+    public static float distance = 0;
 
     public float speed = 5f; //speed of the player,camera
     public float spawnRate = .8f;
@@ -28,6 +31,7 @@ public class Gameplay : MonoBehaviour {
     public GameObject fuelSliderG;
     public GameObject fuelPump;
     public GameObject road;
+    public GameObject timeText;
 
     public Camera cam;
 
@@ -42,6 +46,7 @@ public class Gameplay : MonoBehaviour {
     public Text displayDistance;
     public Text finalScoreT;
     public Text finalScoreF;
+    public Text time;
 
     public AudioSource gameover;
     public AudioSource backgroundMusic;
@@ -61,6 +66,11 @@ public class Gameplay : MonoBehaviour {
 
     private float spawnXPosition;
     private float spawnYPosition;
+
+    private float minuteCount = 0;
+    private float secondCount = 0;
+
+    private bool isPaused = false;
 
     private Vector2 objectPoolPosition = new Vector2(0f, -6f);
 
@@ -100,6 +110,22 @@ public class Gameplay : MonoBehaviour {
 
     }
 
+    private void Update()
+    {
+        if (gameOver != true)
+        {
+            secondCount += Time.deltaTime;
+            if (minuteCount < 10 && secondCount < 10)
+                time.text = "0" + minuteCount.ToString() + ":0" + ((int)secondCount).ToString();
+            else if (minuteCount < 10 && secondCount > 10)
+                time.text = "0" + minuteCount.ToString() + ":" + ((int)secondCount).ToString();
+            else if (minuteCount > 10 && secondCount < 10)
+                time.text = minuteCount.ToString() + ":0" + ((int)secondCount).ToString();
+            else
+                time.text = minuteCount.ToString() + ":" + ((int)secondCount).ToString();
+        }
+    }
+
     // Update is called once per frame
     void FixedUpdate () {
 
@@ -113,6 +139,7 @@ public class Gameplay : MonoBehaviour {
 
        if (gameOver && goc==0)
         {
+            timeText.SetActive(false);
             fuelPump.SetActive(false);
             road.SetActive(false);
             backgroundMusic.Stop();
@@ -121,11 +148,11 @@ public class Gameplay : MonoBehaviour {
 
             if(PlayerPrefs.HasKey("highScore") && check3==1)
             {
-                PlayerPrefs.SetInt("highScore", distance);                
+                PlayerPrefs.SetInt("highScore", (int)distance);                
             }
             else if(!PlayerPrefs.HasKey("highScore"))
             {
-                PlayerPrefs.SetInt("highScore", distance);
+                PlayerPrefs.SetInt("highScore", (int)distance);
             }
 
             boxCollider2D.offset = new Vector2(0, 0);
@@ -164,8 +191,12 @@ public class Gameplay : MonoBehaviour {
 
             transform.Translate(Vector2.up * Time.deltaTime * speed);
             count.transform.Translate(Vector2.up * Time.deltaTime * speed);
-            distance = (int)transform.position.y;
-            fuelMilage = (int)count.transform.position.y;
+
+            distance += .25f*speed/5f;
+            //distance = (int)transform.position.y;
+            displayDistance.text = ((int)distance).ToString();
+
+            fuelMilage = (int)count.transform.position.y;            
 
             //Spawing shapes randomly after the spawnRate expires
             if (timeSinceLastSpawned >= spawnRate)
@@ -176,14 +207,13 @@ public class Gameplay : MonoBehaviour {
 
                 randomPrefabIndex = Random.Range(0, 3);
                 randomGameObject = Instantiate(gameObjects[randomPrefabIndex], objectPoolPosition, Quaternion.identity);
-                randomGameObject.transform.position = new Vector2(spawnXPosition, spawnYPosition);
-
-
+                randomGameObject.transform.position = new Vector2(spawnXPosition, spawnYPosition);                
             }
 
             //Checks score every 10's multiple. Changes shapes and background color randomly
             if(score%10==0 && score!=0 && check2<1)
             {
+                level++;
                 speed = speed + 1f;
                 check2++;
 
@@ -242,8 +272,7 @@ public class Gameplay : MonoBehaviour {
                     }
                 }
 
-                StartCoroutine(shapeAlphaFadeIn());
-                
+                StartCoroutine(shapeAlphaFadeIn());                
             }
             else
             {
@@ -267,13 +296,28 @@ public class Gameplay : MonoBehaviour {
             {
                 StartCoroutine(displayNewHigScore());
                 check3++;
-            }
+            }       
             
-            displayDistance.text = distance.ToString();
-
         }
-		
-	}
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        isPaused = !hasFocus;
+        if (isPaused)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
+    }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        isPaused = pauseStatus;
+        if (isPaused)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
+    }
 
     private IEnumerator shapeAlphaFadeIn()
     {
